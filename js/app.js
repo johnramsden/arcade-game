@@ -4,6 +4,7 @@ var BLOCK_HEIGHT = 83;
 var MAX_SPEED = 100;    // Max speed in pixels
 var OFFSET = 20;        // Offset to have bug in center of square
 var NUM_ENEMIES = 10;   // Total number of Enemies
+var CANVAS_WIDTH = 505;
     
     // Enemies our player must avoid
 var Enemy = function() {
@@ -40,7 +41,9 @@ var Enemy = function() {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
     this.x += this.speed * dt;
-    console.log("Enemy location: " + this.x);
+    if(this.x > CANVAS_WIDTH){
+        this.x = -BLOCK_WIDTH;
+    }
 }
 
 // Draw the enemy on the screen, required method for game
