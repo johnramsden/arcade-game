@@ -1,20 +1,43 @@
 // Enemies our player must avoid
 var Enemy = function() {
+
+    // Constants
+    var BLOCK_WIDTH = 101;
+    var BLOCK_HEIGHT = 73;    
+    var MAX_SPEED = 25; // Max speed in pixels
+    
+    // Returns a multiple of row height for rock textures
+    var randomRockRow = function() {
+        return Math.floor((Math.random() * 3) + 1) * BLOCK_HEIGHT;
+    }
+    
+    var randomSpeed = function() {
+        return Math.floor((Math.random() * MAX_SPEED) + 1);
+    }
+       
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = 0;
+    
+    // Start off screen
+    this.x = -BLOCK_WIDTH;
+    
+    // In order to choose which row to start the enemy 
+    // we choose a random row from 1 to 3 where 1 is 
+    // top rock square and 3 is bottom rock square and
+    // multiply by row height.
+    this.y = randomRockRow();
+    
+    this.speed = randomSpeed();
 }
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    this.x = (this.x + this.speed)*dt;
 }
 
 // Draw the enemy on the screen, required method for game
@@ -44,7 +67,7 @@ Player.prototype.handleInput = function(allowedKeys) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies = [];
+var allEnemies = [new Enemy()];
 var player = new Player;
 
 // This listens for key presses and sends the keys to your
