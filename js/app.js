@@ -1,14 +1,16 @@
-// Enemies our player must avoid
-var Enemy = function() {
-
-    // Constants
-    var BLOCK_WIDTH = 101;
-    var BLOCK_HEIGHT = 73;    
-    var MAX_SPEED = 25; // Max speed in pixels
+// Constants
+var BLOCK_WIDTH = 101;
+var BLOCK_HEIGHT = 83;
+var MAX_SPEED = 100;    // Max speed in pixels
+var OFFSET = 20;        // Offset to have bug in center of square
+var NUM_ENEMIES = 10;   // Total number of Enemies
     
+    // Enemies our player must avoid
+var Enemy = function() {
+   
     // Returns a multiple of row height for rock textures
     var randomRockRow = function() {
-        return Math.floor((Math.random() * 3) + 1) * BLOCK_HEIGHT;
+        return (Math.floor((Math.random() * 3) + 1) * BLOCK_HEIGHT) - OFFSET;
     }
     
     var randomSpeed = function() {
@@ -37,7 +39,8 @@ var Enemy = function() {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    this.x = (this.x + this.speed)*dt;
+    this.x += this.speed * dt;
+    console.log("Enemy location: " + this.x);
 }
 
 // Draw the enemy on the screen, required method for game
@@ -67,7 +70,12 @@ Player.prototype.handleInput = function(allowedKeys) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies = [new Enemy()];
+var allEnemies = [];
+// Add numEnemies
+for(var i = 0; i<NUM_ENEMIES; i++) {
+    allEnemies.push(new Enemy());
+}
+
 var player = new Player;
 
 // This listens for key presses and sends the keys to your
