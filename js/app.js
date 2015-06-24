@@ -1,23 +1,29 @@
-var randomBetweenInterval = function(start, end) {
-        return Math.floor((Math.random() * (end-start+1)) + start);
-}
-
 // Constants
 var BLOCK_WIDTH = 101;
 var BLOCK_HEIGHT = 83;
-var MAX_SPEED = 200;    // Max speed in pixels
-var MIN_SPEED = 50;          // Min speed in pixels
-var OFFSET = 20;        // Offset to have bug in center of square
-var NUM_ENEMIES = 5;   // Total number of Enemies
+var MAX_SPEED = 250;    // Max speed in pixels
+var MIN_SPEED = 50;     // Min speed in pixels
+var OFFSET = 20;        // Offset to get center of square vertically
+var NUM_ENEMIES = 5;    // Total number of Enemies
 var CANVAS_WIDTH = 505;
+
+// Helper functions
+var randomBetweenInterval = function(start, end) {
+    return Math.floor((Math.random() * (end-start+1)) + start);
+}
+
+// Input block number horizontal, far left is 0 and coordinate is returned
+var blockCoordinatesX = function(blockX) {
+    return blockX * BLOCK_WIDTH;
+}
     
+// Input block number vertical, top is 0 and coordinate is returned
+var blockCoordinatesY = function(blockY) {
+    return ((blockY) * BLOCK_HEIGHT) - OFFSET;
+}
     // Enemies our player must avoid
 var Enemy = function() {       
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+    // The image/sprite for our enemies
     this.sprite = 'images/enemy-bug.png';
     
     // Start random distance off screen up to a screen off
@@ -58,14 +64,18 @@ Enemy.prototype.randomSpeed = function() {
 }
 
 Enemy.prototype.randomStartPos = function() {
-        return -randomBetweenInterval(0, CANVAS_WIDTH);
+        return -randomBetweenInterval(-CANVAS_WIDTH, CANVAS_WIDTH);
 }
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
+    // The image/sprite for our player
+    this.sprite = 'images/char-boy.png';
     
+    this.x = blockCoordinatesX(2); // Start player in middle
+    this.y = blockCoordinatesY(5); // Start player at bottom
 }
 
 Player.prototype.update = function(dt) {
@@ -73,11 +83,21 @@ Player.prototype.update = function(dt) {
 }
 
 Player.prototype.render = function() {
-    
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
 Player.prototype.handleInput = function(allowedKeys) {
-    
+    if(allowedKeys === 'left' && (this.x != blockCoordinatesX(0))) {
+        this.x -= BLOCK_WIDTH;
+    } else if (allowedKeys === 'right' && (this.x != blockCoordinatesX(4))){
+        this.x += BLOCK_WIDTH;
+    } else if (allowedKeys === 'up' && (this.y != blockCoordinatesY(0))){
+        this.y -= BLOCK_HEIGHT;
+    } else if (allowedKeys === 'down' && (this.y != blockCoordinatesY(5))){
+        this.y += BLOCK_HEIGHT;
+    } else {
+        console.log("AT END OF SCREEN, CANNOT MOVE FURTHER.")
+    }
 }
 
 // Now instantiate your objects.
