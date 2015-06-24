@@ -78,8 +78,16 @@ var Player = function() {
     this.y = blockCoordinatesY(5); // Start player at bottom
 }
 
-Player.prototype.update = function(dt) {
-    
+Player.prototype.update = function () {
+    for (var i = 0; i < allEnemies.length; i++) {
+        if ((allEnemies[i].y === this.y)) {
+            if((this.x >= allEnemies[i].x - BLOCK_WIDTH) && (this.x <= (allEnemies[i].x + BLOCK_WIDTH))) {
+                this.x = blockCoordinatesX(2); // Move player to middle
+                this.y = blockCoordinatesY(5); // Move player to bottom
+                console.log("COLLISION");
+            }
+        }
+    }
 }
 
 Player.prototype.render = function() {
