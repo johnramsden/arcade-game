@@ -6,19 +6,6 @@ var STARTING_NUM_ENEMIES = 3;    // Starting number of Enemies
 var CANVAS_WIDTH = 505;
 var FULL_SCORE = 10000; // Score for perfect run on level 1
 // Helper functions
-var randomBetweenInterval = function (start, end) {
-    return Math.floor((Math.random() * (end - start + 1)) + start);
-}
-
-// Input block number horizontal, far left is 0 and coordinate is returned
-var blockCoordinatesX = function (blockX) {
-    return blockX * BLOCK_WIDTH;
-}
-
-// Input block number vertical, top is 0 and coordinate is returned
-var blockCoordinatesY = function (blockY) {
-    return ((blockY) * BLOCK_HEIGHT) - OFFSET;
-}
 
 // Add an enemy and increase speed every level
 var setupLevel = function (level) {
@@ -75,15 +62,19 @@ Enemy.prototype.render = function () {
 
 // Returns a multiple of row height for rock textures
 Enemy.prototype.randomRockRow = function () {
-    return (randomBetweenInterval(1, 3) * BLOCK_HEIGHT) - OFFSET;
+    return (Enemy.randomBetweenInterval(1, 3) * BLOCK_HEIGHT) - OFFSET;
 }
 
 Enemy.prototype.randomSpeed = function () {
-    return randomBetweenInterval(minSpeed, maxSpeed);
+    return Enemy.randomBetweenInterval(minSpeed, maxSpeed);
 }
 
 Enemy.prototype.randomStartPos = function () {
-    return -randomBetweenInterval(-CANVAS_WIDTH, CANVAS_WIDTH);
+    return -Enemy.randomBetweenInterval(-CANVAS_WIDTH, CANVAS_WIDTH);
+}
+
+Enemy.randomBetweenInterval = function (start, end) {
+    return Math.floor((Math.random() * (end - start + 1)) + start);
 }
 
 // Now write your own player class
@@ -93,8 +84,8 @@ var Player = function () {
     // The image/sprite for our player
     this.sprite = 'images/char-boy.png';
 
-    this.x = blockCoordinatesX(2); // Start player in middle
-    this.y = blockCoordinatesY(5); // Start player at bottom
+    this.x = Player.blockCoordinatesX(2); // Start player in middle
+    this.y = Player.blockCoordinatesY(5); // Start player at bottom
 }
 
 Player.prototype.update = function () {
@@ -102,8 +93,8 @@ Player.prototype.update = function () {
         if ((allEnemies[i].y === this.y)) { 
             // If player is on the same row as enemy check if enemy is in in vicinity
             if ((this.x >= allEnemies[i].x - BLOCK_WIDTH) && (this.x <= (allEnemies[i].x + BLOCK_WIDTH))) {
-                this.x = blockCoordinatesX(2); // Move player to middle
-                this.y = blockCoordinatesY(5); // Move player to bottom
+                this.x = Player.blockCoordinatesX(2); // Move player to middle
+                this.y = Player.blockCoordinatesY(5); // Move player to bottom
                 console.log("COLLISION");
                 score -= 500; // Reduce score every collision
                 setupLevelScore(score);
@@ -112,10 +103,10 @@ Player.prototype.update = function () {
     }
     
     // If player gets to end start a new level
-    if (this.y === blockCoordinatesY(0)) {
+    if (this.y === Player.blockCoordinatesY(0)) {
         setupLevel(++level);
-        this.x = blockCoordinatesX(2); // Move player to middle
-        this.y = blockCoordinatesY(5); // Move player to bottom
+        this.x = Player.blockCoordinatesX(2); // Move player to middle
+        this.y = Player.blockCoordinatesY(5); // Move player to bottom
     }
 }
 
@@ -124,17 +115,27 @@ Player.prototype.render = function () {
 }
 
 Player.prototype.handleInput = function (allowedKeys) {
-    if (allowedKeys === 'left' && (this.x != blockCoordinatesX(0))) {
+    if (allowedKeys === 'left' && (this.x != Player.blockCoordinatesX(0))) {
         this.x -= BLOCK_WIDTH;
-    } else if (allowedKeys === 'right' && (this.x != blockCoordinatesX(4))) {
+    } else if (allowedKeys === 'right' && (this.x != Player.blockCoordinatesX(4))) {
         this.x += BLOCK_WIDTH;
-    } else if (allowedKeys === 'up' && (this.y != blockCoordinatesY(0))) {
+    } else if (allowedKeys === 'up' && (this.y != Player.blockCoordinatesY(0))) {
         this.y -= BLOCK_HEIGHT;
-    } else if (allowedKeys === 'down' && (this.y != blockCoordinatesY(5))) {
+    } else if (allowedKeys === 'down' && (this.y != Player.blockCoordinatesY(5))) {
         this.y += BLOCK_HEIGHT;
     } else {
         console.log("AT END OF SCREEN, CANNOT MOVE FURTHER.")
     }
+}
+
+// Input block number horizontal, far left is 0 and coordinate is returned
+Player.blockCoordinatesX = function (blockX) {
+    return blockX * BLOCK_WIDTH;
+}
+
+// Input block number vertical, top is 0 and coordinate is returned
+Player.blockCoordinatesY = function (blockY) {
+    return ((blockY) * BLOCK_HEIGHT) - OFFSET;
 }
 
 // Now instantiate your objects.
