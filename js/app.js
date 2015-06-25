@@ -48,7 +48,7 @@ Game.prototype.setupLevel = function () {
 
 // Update the total score in HTML
 Game.prototype.updateScore = function () {
-    document.getElementById("score").innerHTML = "Total Score: " + this.score;
+    document.getElementById("score").innerHTML = "Total Score: " + this.totalScore;
 };
 
 // Update the level score in HTML
