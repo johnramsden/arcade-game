@@ -1,6 +1,11 @@
 frontend-nanodegree-arcade-game
 ===============================
 
+Instructions for setting up:
+
+Download entire project and open index.html.
+
+
 Instructions for playing:
 
 Use arrow keys to play, avoid hitting Enemies and get to the water.
